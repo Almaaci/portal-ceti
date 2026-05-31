@@ -6,6 +6,8 @@ import {
   collection,
   addDoc,
   getDocs,
+  deleteDoc,
+  doc,
 } from "firebase/firestore";
 
 function App() {
@@ -72,6 +74,14 @@ function App() {
       alert("Completa todos los campos");
       return;
     }
+    const eliminarUsuario = async (id) => {
+  try {
+    await deleteDoc(doc(db, "usuarios", id));
+    cargarUsuarios();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
     try {
       await addDoc(
@@ -121,6 +131,14 @@ function App() {
       alert("Completa todos los campos");
       return;
     }
+    const eliminarAviso = async (id) => {
+  try {
+    await deleteDoc(doc(db, "avisos", id));
+    cargarAvisos();
+  } catch (error) {
+    console.log(error);
+  }
+};
 
     try {
       await addDoc(
@@ -207,9 +225,17 @@ function App() {
               borderRadius: "5px",
             }}
           >
-            <strong>{usuario.nombre}</strong>
-            <br />
-            {usuario.rol}
+          <strong>{usuario.nombre}</strong>
+<br />
+{usuario.rol}
+
+<br /><br />
+
+<button
+  onClick={() => eliminarUsuario(usuario.id)}
+>
+  🗑️ Eliminar
+</button>
           </div>
         ))}
       </div>
@@ -280,11 +306,19 @@ function App() {
               borderRadius: "5px",
             }}
           >
-            <strong>{aviso.titulo}</strong>
+          <strong>{aviso.titulo}</strong>
 
-            <br /><br />
+<br /><br />
 
-            {aviso.contenido}
+{aviso.contenido}
+
+<br /><br />
+
+<button
+  onClick={() => eliminarAviso(aviso.id)}
+>
+  🗑️ Eliminar
+</button>
           </div>
         ))}
       </div>
