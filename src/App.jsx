@@ -49,115 +49,122 @@ function App() {
   // =========================
 
   const cargarUsuarios = async () => {
-    try {
-      const consulta = await getDocs(
-        collection(db, "usuarios")
-      );
-
-      const lista = [];
-
-      consulta.forEach((doc) => {
-        lista.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-
-      setUsuarios(lista);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const guardarUsuario = async () => {
-    if (!nombreNuevo || !rolNuevo) {
-      alert("Completa todos los campos");
-      return;
-    }
-    const eliminarUsuario = async (id) => {
   try {
-    await deleteDoc(doc(db, "usuarios", id));
+    const consulta = await getDocs(
+      collection(db, "usuarios")
+    );
+
+    const lista = [];
+
+    consulta.forEach((doc) => {
+      lista.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    setUsuarios(lista);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const guardarUsuario = async () => {
+  if (!nombreNuevo || !rolNuevo) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  try {
+    await addDoc(
+      collection(db, "usuarios"),
+      {
+        nombre: nombreNuevo,
+        rol: rolNuevo,
+      }
+    );
+
+    setNombreNuevo("");
+    setRolNuevo("");
+
     cargarUsuarios();
   } catch (error) {
     console.log(error);
   }
 };
 
-    try {
-      await addDoc(
-        collection(db, "usuarios"),
-        {
-          nombre: nombreNuevo,
-          rol: rolNuevo,
-        }
-      );
+const eliminarUsuario = async (id) => {
+  try {
+    await deleteDoc(doc(db, "usuarios", id));
 
-      setNombreNuevo("");
-      setRolNuevo("");
+    cargarUsuarios();
 
-      cargarUsuarios();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+    console.log("Usuario eliminado");
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   // =========================
   // AVISOS
   // =========================
 
-  const cargarAvisos = async () => {
-    try {
-      const consulta = await getDocs(
-        collection(db, "avisos")
-      );
-
-      const lista = [];
-
-      consulta.forEach((doc) => {
-        lista.push({
-          id: doc.id,
-          ...doc.data(),
-        });
-      });
-
-      setAvisos(lista);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const guardarAviso = async () => {
-    if (!tituloAviso || !contenidoAviso) {
-      alert("Completa todos los campos");
-      return;
-    }
-    const eliminarAviso = async (id) => {
+ const cargarAvisos = async () => {
   try {
-    await deleteDoc(doc(db, "avisos", id));
+    const consulta = await getDocs(
+      collection(db, "avisos")
+    );
+
+    const lista = [];
+
+    consulta.forEach((doc) => {
+      lista.push({
+        id: doc.id,
+        ...doc.data(),
+      });
+    });
+
+    setAvisos(lista);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const guardarAviso = async () => {
+  if (!tituloAviso || !contenidoAviso) {
+    alert("Completa todos los campos");
+    return;
+  }
+
+  try {
+    await addDoc(
+      collection(db, "avisos"),
+      {
+        titulo: tituloAviso,
+        contenido: contenidoAviso,
+      }
+    );
+
+    setTituloAviso("");
+    setContenidoAviso("");
+
     cargarAvisos();
   } catch (error) {
     console.log(error);
   }
 };
 
-    try {
-      await addDoc(
-        collection(db, "avisos"),
-        {
-          titulo: tituloAviso,
-          contenido: contenidoAviso,
-        }
-      );
+const eliminarAviso = async (id) => {
+  try {
+    await deleteDoc(doc(db, "avisos", id));
 
-      setTituloAviso("");
-      setContenidoAviso("");
+    cargarAvisos();
 
-      cargarAvisos();
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+    console.log("Aviso eliminado");
+  } catch (error) {
+    console.log(error);
+  }
+};
   // =========================
   // PANTALLA USUARIOS
   // =========================
