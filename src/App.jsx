@@ -1270,32 +1270,83 @@ export default function App() {
   });
   const [actividad, setActividad] = useState({ usuarios: [], avisos: [], mensajes: [] });
 
-  // Escuchar autenticación
-  useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
-      if (user) {
-        setUsuario(user);
-        // Buscar rol en Firestore
-        try {
-          const snap = await getDocs(query(collection(db, "usuarios"), where("correo", "==", user.email)));
-          if (!snap.empty) {
-  const data = snap.docs[0].data();
+// Escuchar autenticación
+useEffect(() => {
+  const unsub = onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      setUsuario(user);
 
-  console.log("Usuario encontrado:", data);
-  console.log("ROL:", data.rol);
+      // ── DIAGNÓSTICO 1: verificar exactamente qué email recibe Firebase Auth
+      const emailAuth = (user.email || "").trim().toLowerCase();
+      console.log("[ROL DEBUG] user.uid:", user.uid);
+      console.log("[ROL DEBUG] user.email RAW:", JSON.stringify(user.email));
+      console.log("[ROL DEBUG] email normalizado para query:", emailAuth);
 
-  setRol(data.rol || "Estudiante");
-}
-        } catch {}
-        cargarStats();
-      } else {
-        setUsuario(null);
+      try {
+        // ── Opción A: query por correo normalizado
+        const snapNorm = await getDocs(
+          query(collection(db, "usuarios"), where("correo", "==", emailAuth))
+        );
+        console.log("[ROL DEBUG] Docs con email NORMALIZADO:", snapNorm.size);
+
+        // ── Opción B (diagnóstico): query por correo tal cual viene de Auth
+        const snapRaw = await getDocs(
+          query(collection(db, "usuarios"), where("correo", "==", user.email))
+        );
+        console.log("[ROL DEBUG] Docs con email RAW:", snapRaw.size);
+
+        // ── DIAGNÓSTICO 2: listar TODOS los correos en la colección para comparar
+        const snapTodos = await getDocs(collection(db, "usuarios"));
+        console.log("[ROL DEBUG] Total docs en 'usuarios':", snapTodos.size);
+        snapTodos.forEach(d => {
+          const correoFirestore = d.data().correo;
+          console.log(
+            `[ROL DEBUG] Doc ${d.id} → correo: ${JSON.stringify(correoFirestore)} | ¿coincide normalizado?: ${(correoFirestore || "").trim().toLowerCase() === emailAuth}`
+          );
+        });
+
+        // ── Usar primero el resultado normalizado, luego el raw como fallback
+        let docData = null;
+        if (!snapNorm.empty) {
+          docData = snapNorm.docs[0].data();
+          console.log("[ROL DEBUG] Match por email NORMALIZADO:", docData);
+        } else if (!snapRaw.empty) {
+          docData = snapRaw.docs[0].data();
+          console.log("[ROL DEBUG] Match por email RAW:", docData);
+        } else {
+          // ── DIAGNÓSTICO 3: buscar manualmente por si la query falla por índices
+          const matchManual = snapTodos.docs.find(d =>
+            (d.data().correo || "").trim().toLowerCase() === emailAuth
+          );
+          if (matchManual) {
+            docData = matchManual.data();
+            console.log("[ROL DEBUG] Match MANUAL (la query where falla, revisar índices Firestore):", docData);
+          }
+        }
+
+        if (docData) {
+          console.log("[ROL DEBUG] ROL asignado:", docData.rol);
+          setRol(docData.rol || "Estudiante");
+        } else {
+          console.warn("[ROL DEBUG] No se encontró ningún doc para este usuario. Revisa los logs anteriores.");
+          setRol("Estudiante");
+        }
+      } catch (error) {
+        console.error("[ROL DEBUG] Error al consultar Firestore:", error.code, error.message);
         setRol("Estudiante");
       }
-      setCargando(false);
-    });
-    return unsub;
-  }, []);
+
+      cargarStats();
+    } else {
+      setUsuario(null);
+      setRol("Estudiante");
+    }
+
+    setCargando(false);
+  });
+
+  return unsub;
+}, []);
 
   const cargarStats = async () => {
     try {
