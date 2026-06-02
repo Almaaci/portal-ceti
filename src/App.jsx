@@ -22,6 +22,14 @@ function App() {
   const [usuarios, setUsuarios] = useState([]);
   const [nombreNuevo, setNombreNuevo] = useState("");
   const [rolNuevo, setRolNuevo] = useState("");
+  const [correoNuevo, setCorreoNuevo] = useState("");
+const [registroNuevo, setRegistroNuevo] = useState("");
+const [carreraNueva, setCarreraNueva] = useState("");
+const [semestreNuevo, setSemestreNuevo] = useState("");
+const [grupoNuevo, setGrupoNuevo] = useState("");
+
+const [departamentoNuevo, setDepartamentoNuevo] = useState("");
+const [materiaNueva, setMateriaNueva] = useState("");
 
   // Avisos
   const [avisos, setAvisos] = useState([]);
@@ -76,30 +84,42 @@ const guardarUsuario = async () => {
   }
 
   try {
+    const nuevoUsuario = {
+      nombre: nombreNuevo,
+      correo: correoNuevo,
+      rol: rolNuevo,
+    };
+
+    if (rolNuevo === "Estudiante") {
+      nuevoUsuario.registro = registroNuevo;
+      nuevoUsuario.carrera = carreraNueva;
+      nuevoUsuario.semestre = semestreNuevo;
+      nuevoUsuario.grupo = grupoNuevo;
+    }
+
+    if (rolNuevo === "Maestro") {
+      nuevoUsuario.departamento = departamentoNuevo;
+      nuevoUsuario.materia = materiaNueva;
+    }
+
     await addDoc(
       collection(db, "usuarios"),
-      {
-        nombre: nombreNuevo,
-        rol: rolNuevo,
-      }
+      nuevoUsuario
     );
 
     setNombreNuevo("");
+    setCorreoNuevo("");
     setRolNuevo("");
 
-    cargarUsuarios();
-  } catch (error) {
-    console.log(error);
-  }
-};
+    setRegistroNuevo("");
+    setCarreraNueva("");
+    setSemestreNuevo("");
+    setGrupoNuevo("");
 
-const eliminarUsuario = async (id) => {
-  try {
-    await deleteDoc(doc(db, "usuarios", id));
+    setDepartamentoNuevo("");
+    setMateriaNueva("");
 
     cargarUsuarios();
-
-    console.log("Usuario eliminado");
   } catch (error) {
     console.log(error);
   }
@@ -196,23 +216,148 @@ const eliminarAviso = async (id) => {
             width: "300px",
           }}
         />
+<br /><br />
+<input
+  type="email"
+  placeholder="Correo"
+  value={correoNuevo}
+  onChange={(e) =>
+    setCorreoNuevo(e.target.value)
+  }
+  style={{
+    padding: "10px",
+    width: "300px",
+  }}
+/>
 
-        <br /><br />
+<br /><br />
 
-        <input
-          type="text"
-          placeholder="Rol"
-          value={rolNuevo}
-          onChange={(e) =>
-            setRolNuevo(e.target.value)
-          }
-          style={{
-            padding: "10px",
-            width: "300px",
-          }}
-        />
+<select
+  value={rolNuevo}
+  onChange={(e) =>
+    setRolNuevo(e.target.value)
+  }
+  style={{
+    padding: "10px",
+    width: "300px",
+  }}
+>
+  <option value="">
+    Selecciona un rol
+  </option>
 
-        <br /><br />
+  <option value="Administrador">
+    Administrador
+  </option>
+
+  <option value="Maestro">
+    Maestro
+  </option>
+
+  <option value="Estudiante">
+    Estudiante
+  </option>
+</select>
+
+{rolNuevo === "Estudiante" && (
+  <>
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Número de registro"
+      value={registroNuevo}
+      onChange={(e) =>
+        setRegistroNuevo(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Carrera"
+      value={carreraNueva}
+      onChange={(e) =>
+        setCarreraNueva(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Semestre"
+      value={semestreNuevo}
+      onChange={(e) =>
+        setSemestreNuevo(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Grupo"
+      value={grupoNuevo}
+      onChange={(e) =>
+        setGrupoNuevo(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+  </>
+)}
+
+{rolNuevo === "Maestro" && (
+  <>
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Departamento"
+      value={departamentoNuevo}
+      onChange={(e) =>
+        setDepartamentoNuevo(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+
+    <br /><br />
+
+    <input
+      type="text"
+      placeholder="Materia"
+      value={materiaNueva}
+      onChange={(e) =>
+        setMateriaNueva(e.target.value)
+      }
+      style={{
+        padding: "10px",
+        width: "300px",
+      }}
+    />
+  </>
+)}
+
+<br /><br />
 
         <button onClick={guardarUsuario}>
           Guardar Usuario
