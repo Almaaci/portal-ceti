@@ -1,13 +1,11 @@
 // ============================================================
-// PORTAL CETI — App.jsx completo
-// React + Firebase Auth + Firestore + Storage
-// Roles: Administrador | Maestro | Estudiante
+// PORTAL CETI 
 // ============================================================
 
 import { useState, useEffect, useRef } from "react";
-import { signInWithEmailAndPassword, signOut } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth, db, storage } from "./firebase";
+import { auth, authAux, db, storage } from "./firebase";
 import {
   collection,
   addDoc,
@@ -929,11 +927,12 @@ function Usuarios({ correo, rol }) {
   const [editando,   setEditando]   = useState(null);
   const [msg,        setMsg]        = useState(null);
 
-  const vacioForm = {
-    nombre: "", correo: "", rol: "Estudiante",
-    registro: "", carrera: "", semestre: "", grupo: "",
-    departamento: "", materia: "",
-  };
+ const vacioForm = {
+  nombre: "", correo: "", password: "", rol: "Estudiante",
+  registro: "", carrera: "", semestre: "", grupo: "",
+  departamento: "", materia: "",
+};
+
   const [form, setForm] = useState(vacioForm);
 
   const cargar = async () => {
@@ -956,25 +955,70 @@ function Usuarios({ correo, rol }) {
     const puedeEditar = esAdmin || (esMaestro && u.rol === "Estudiante");
     if (!puedeEditar) { setMsg({ tipo: "error", txt: "Sin permiso para editar este usuario." }); return; }
     setEditando(u);
-    setForm({ nombre: u.nombre||"", correo: u.correo||"", rol: u.rol||"Estudiante", registro: u.registro||"", carrera: u.carrera||"", semestre: u.semestre||"", grupo: u.grupo||"", departamento: u.departamento||"", materia: u.materia||"" });
+   setForm({ nombre: u.nombre||"", correo: u.correo||"", password: "", rol: u.rol||"Estudiante", registro: u.registro||"", carrera: u.carrera||"", semestre: u.semestre||"", grupo: u.grupo||"", departamento: u.departamento||"", materia: u.materia||"" });
     setModalForm(true);
   };
 
   const guardar = async () => {
-    if (!form.nombre || !form.correo || !form.rol) { setMsg({ tipo: "error", txt: "Nombre, correo y rol son requeridos." }); return; }
-    try {
+  if (!form.nombre || !form.correo || !form.rol) {
+    setMsg({ tipo: "error", txt: "Nombre, correo y rol son requeridos." }); return;
+  }
+  if (!editando && !form.password) {
+    setMsg({ tipo: "error", txt: "La contraseña es requerida para usuarios nuevos." }); return;
+  }
+  if (!editando && form.password.length < 6) {
+    setMsg({ tipo: "error", txt: "La contraseña debe tener al menos 6 caracteres." }); return;
+  }
+
+  try {
+    if (editando) {
+      // Solo actualizar Firestore — no se toca Auth
       const data = { ...form, fechaActualizacion: serverTimestamp() };
-      if (editando) {
-        await updateDoc(doc(db, "usuarios", editando.id), data);
-        setMsg({ tipo: "exito", txt: "Usuario actualizado." });
-      } else {
-        await addDoc(collection(db, "usuarios"), { ...data, fechaCreacion: serverTimestamp() });
-        setMsg({ tipo: "exito", txt: "Usuario creado." });
-      }
+      delete data.password; // nunca guardar contraseña en Firestore
+      await updateDoc(doc(db, "usuarios", editando.id), data);
+      setMsg({ tipo: "exito", txt: "Usuario actualizado." });
       setModalForm(false);
       cargar();
-    } catch (e) { setMsg({ tipo: "error", txt: e.message }); }
-  };
+    } else {
+      // CREACIÓN: primero crear en Auth usando authAux (no desloguea al admin)
+      const correoLimpio = form.correo.trim().toLowerCase();
+      const cred = await createUserWithEmailAndPassword(authAux, correoLimpio, form.password);
+      const nuevoUID = cred.user.uid;
+
+      // Luego guardar en Firestore usando el UID como ID del documento
+      const { setDoc } = await import("firebase/firestore");
+      const data = {
+        uid: nuevoUID,
+        nombre: form.nombre.trim(),
+        correo: correoLimpio,
+        rol: form.rol,
+        registro: form.registro || "",
+        carrera: form.carrera || "",
+        semestre: form.semestre || "",
+        grupo: form.grupo || "",
+        departamento: form.departamento || "",
+        materia: form.materia || "",
+        fechaCreacion: serverTimestamp(),
+        fechaActualizacion: serverTimestamp(),
+      };
+      await setDoc(doc(db, "usuarios", nuevoUID), data);
+
+      // Cerrar sesión del authAux para dejarlo limpio
+      await signOut(authAux);
+
+      setMsg({ tipo: "exito", txt: `Usuario "${form.nombre}" creado correctamente. Ya puede iniciar sesión.` });
+      setModalForm(false);
+      cargar();
+    }
+  } catch (e) {
+    const errores = {
+      "auth/email-already-in-use": "Ese correo ya está registrado en el sistema.",
+      "auth/weak-password":        "Contraseña muy débil (mínimo 6 caracteres).",
+      "auth/invalid-email":        "Formato de correo inválido.",
+    };
+    setMsg({ tipo: "error", txt: errores[e.code] || "Error: " + e.message });
+  }
+};
 
   const eliminar = async (u) => {
     if (!esAdmin) { setMsg({ tipo: "error", txt: "Sin permiso." }); return; }
@@ -1050,19 +1094,56 @@ function Usuarios({ correo, rol }) {
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
             <Campo label="Nombre completo *" value={form.nombre} onChange={e => setForm(p => ({ ...p, nombre: e.target.value }))} placeholder="Nombre y apellidos" />
             <Campo label="Correo *" value={form.correo} onChange={e => setForm(p => ({ ...p, correo: e.target.value }))} placeholder="correo@ceti.mx" type="email" />
+         {!editando && (
+  <div style={{ gridColumn: "1 / -1" }}>
+    <Campo
+      label="Contraseña *"
+      value={form.password}
+      onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
+      placeholder="Mínimo 6 caracteres"
+      type="password"
+    />
+  </div>
+)}
+         {!editando && (
+              <Campo label="Contraseña *" value={form.password}
+                onChange={e => setForm(p => ({ ...p, password: e.target.value }))}
+                placeholder="Mínimo 6 caracteres" type="password" />
+            )}
           </div>
           <CampoSelect label="Rol *" value={form.rol} onChange={e => setForm(p => ({ ...p, rol: e.target.value }))}
             options={esAdmin ? ["Estudiante", "Maestro", "Administrador"] : ["Estudiante"]}
             disabled={!esAdmin && !!editando && editando.rol !== "Estudiante"}
           />
-          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-            <Campo label="No. Registro" value={form.registro} onChange={e => setForm(p => ({ ...p, registro: e.target.value }))} placeholder="Número de registro" />
-            <Campo label="Carrera" value={form.carrera} onChange={e => setForm(p => ({ ...p, carrera: e.target.value }))} placeholder="Ingeniería en..." />
-            <Campo label="Semestre" value={form.semestre} onChange={e => setForm(p => ({ ...p, semestre: e.target.value }))} placeholder="1–12" />
-            <Campo label="Grupo" value={form.grupo} onChange={e => setForm(p => ({ ...p, grupo: e.target.value }))} placeholder="A, B, C..." />
-            <Campo label="Departamento" value={form.departamento} onChange={e => setForm(p => ({ ...p, departamento: e.target.value }))} placeholder="Depto. académico" />
-            <Campo label="Materia" value={form.materia} onChange={e => setForm(p => ({ ...p, materia: e.target.value }))} placeholder="Materia que imparte" />
-          </div>
+          {form.rol === "Estudiante" && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+              <Campo label="No. Registro" value={form.registro}
+                onChange={e => setForm(p => ({ ...p, registro: e.target.value }))} placeholder="Número de registro" />
+              <Campo label="Carrera" value={form.carrera}
+                onChange={e => setForm(p => ({ ...p, carrera: e.target.value }))} placeholder="Ingeniería en..." />
+              <Campo label="Semestre" value={form.semestre}
+                onChange={e => setForm(p => ({ ...p, semestre: e.target.value }))} placeholder="1–12" />
+              <Campo label="Grupo" value={form.grupo}
+                onChange={e => setForm(p => ({ ...p, grupo: e.target.value }))} placeholder="A, B, C..." />
+            </div>
+          )}
+          {form.rol === "Maestro" && (
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
+              <Campo label="No. Empleado" value={form.registro}
+                onChange={e => setForm(p => ({ ...p, registro: e.target.value }))} placeholder="Número de empleado" />
+              <Campo label="División" value={form.departamento}
+                onChange={e => setForm(p => ({ ...p, departamento: e.target.value }))} placeholder="División académica" />
+              <div style={{ gridColumn: "1 / -1" }}>
+                <Campo label="Materia que imparte" value={form.materia}
+                  onChange={e => setForm(p => ({ ...p, materia: e.target.value }))} placeholder="Nombre de la materia" />
+              </div>
+            </div>
+          )}
+          {form.rol === "Administrador" && (
+            <Campo label="Departamento" value={form.departamento}
+              onChange={e => setForm(p => ({ ...p, departamento: e.target.value }))} placeholder="Depto. de Sistemas, Dirección..." />
+          )}
+
           {msg && <Alerta tipo={msg.tipo}>{msg.txt}</Alerta>}
           <div style={{ display: "flex", gap: 10, marginTop: 8 }}>
             <Btn onClick={guardar}>{editando ? "💾 Actualizar" : "✅ Crear usuario"}</Btn>
@@ -1089,7 +1170,7 @@ function Informes({ correo, rol }) {
   const [progreso,  setProgreso]  = useState(0);
   const fileRef = useRef();
 
-  const vacioForm = { titulo: "", descripcion: "", archivo: null, archivoNombre: "", archivoURL: "" };
+  const vacioForm = { titulo: "", descripcion: "", archivo: null, archivoNombre: "", archivoURL: "", archivoRuta: "" };
   const [form, setForm] = useState(vacioForm);
 
   const cargar = async () => {
@@ -1108,41 +1189,76 @@ function Informes({ correo, rol }) {
     setModalForm(true);
   };
 
-  const subirArchivo = () => new Promise((resolve, reject) => {
-    if (!form.archivo) { resolve(null); return; }
-    const ext = form.archivo.name.split(".").pop();
-    const ruta = `informes/${Date.now()}_${form.archivo.name}`;
-    const storageRef = ref(storage, ruta);
-    const task = uploadBytesResumable(storageRef, form.archivo);
-    task.on("state_changed",
-      snap => setProgreso(Math.round(snap.bytesTransferred / snap.totalBytes * 100)),
-      reject,
-      async () => { const url = await getDownloadURL(task.snapshot.ref); resolve({ url, nombre: form.archivo.name, ruta }); }
-    );
-  });
+ const subirArchivo = () => new Promise((resolve, reject) => {
+  if (!form.archivo) { resolve(null); return; }
+  const nombreSeguro = form.archivo.name.replace(/\s+/g, "_");
+  const ruta = `informes/${Date.now()}_${nombreSeguro}`;
+  const storageRef = ref(storage, ruta);
+  const metadata = { contentType: form.archivo.type };
+  const task = uploadBytesResumable(storageRef, form.archivo, metadata);
+  task.on(
+    "state_changed",
+    (snapshot) => {
+      if (snapshot.totalBytes > 0) {
+        setProgreso(Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100));
+      }
+    },
+    (error) => {
+      console.error("Storage error:", error.code, error.message);
+      reject(error);
+    },
+    async () => {
+      try {
+        const url = await getDownloadURL(task.snapshot.ref);
+        resolve({ url, nombre: form.archivo.name, ruta });
+      } catch (e) {
+        reject(e);
+      }
+    }
+  );
+});
 
-  const guardar = async () => {
-    if (!form.titulo) { setMsg({ tipo: "error", txt: "El título es requerido." }); return; }
-    setSubiendo(true); setProgreso(0);
-    try {
-      let archivoData = { archivoURL: form.archivoURL, archivoNombre: form.archivoNombre };
-      if (form.archivo) {
-        const res = await subirArchivo();
-        if (res) archivoData = { archivoURL: res.url, archivoNombre: res.nombre, archivoRuta: res.ruta };
+const guardar = async () => {
+  if (!form.titulo.trim()) { setMsg({ tipo: "error", txt: "El título es requerido." }); return; }
+  setSubiendo(true); setProgreso(0); setMsg(null);
+  try {
+    let archivoData = {
+      archivoURL: form.archivoURL || "",
+      archivoNombre: form.archivoNombre || "",
+      archivoRuta: form.archivoRuta || "",
+    };
+    if (form.archivo) {
+      setMsg({ tipo: "info", txt: "Subiendo archivo, espera..." });
+      const res = await subirArchivo();
+      if (res) {
+        archivoData = { archivoURL: res.url, archivoNombre: res.nombre, archivoRuta: res.ruta };
+        setMsg(null);
       }
-      const data = { titulo: form.titulo, descripcion: form.descripcion, ...archivoData, autor: correo, autorCorreo: correo, fechaActualizacion: serverTimestamp() };
-      if (editando) {
-        await updateDoc(doc(db, "informes", editando.id), data);
-        setMsg({ tipo: "exito", txt: "Informe actualizado." });
-      } else {
-        await addDoc(collection(db, "informes"), { ...data, fecha: serverTimestamp() });
-        setMsg({ tipo: "exito", txt: "Informe creado." });
-      }
-      setModalForm(false);
-      cargar();
-    } catch (e) { setMsg({ tipo: "error", txt: e.message }); }
+    }
+    const data = {
+      titulo: form.titulo.trim(),
+      descripcion: form.descripcion || "",
+      ...archivoData,
+      autor: correo,
+      autorCorreo: correo,
+      fechaActualizacion: serverTimestamp(),
+    };
+    if (editando) {
+      await updateDoc(doc(db, "informes", editando.id), data);
+      setMsg({ tipo: "exito", txt: "Informe actualizado correctamente." });
+    } else {
+      await addDoc(collection(db, "informes"), { ...data, fecha: serverTimestamp() });
+      setMsg({ tipo: "exito", txt: "Informe publicado correctamente." });
+    }
+    setModalForm(false);
+    cargar();
+  } catch (e) {
+    console.error("Error guardar informe:", e);
+    setMsg({ tipo: "error", txt: "Error: " + (e.message || e.code || "desconocido") });
+  } finally {
     setSubiendo(false);
-  };
+  }
+};
 
   const eliminar = async (inf) => {
     if (!esAdmin) { setMsg({ tipo: "error", txt: "Sin permiso." }); return; }
@@ -1235,6 +1351,36 @@ function Informes({ correo, rol }) {
               onChange={e => e.target.files[0] && setForm(p => ({ ...p, archivo: e.target.files[0] }))}
             />
           </div>
+{/* Vista previa de imagen o PDF seleccionado */}
+          {form.archivo && (() => {
+            const ext = form.archivo.name.split(".").pop().toLowerCase();
+            const esImagen = ["jpg","jpeg","png","gif","webp"].includes(ext);
+            const esPDF    = ext === "pdf";
+            if (esImagen) {
+              const url = URL.createObjectURL(form.archivo);
+              return (
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, color: C.suave, marginBottom: 6, fontWeight: 600 }}>VISTA PREVIA</div>
+                  <img src={url} alt="preview"
+                    style={{ maxWidth: "100%", maxHeight: 200, borderRadius: 10, objectFit: "contain", border: `1px solid ${C.borde}` }}
+                  />
+                </div>
+              );
+            }
+            if (esPDF) {
+              return (
+                <div style={{ marginBottom: 14 }}>
+                  <div style={{ fontSize: 11, color: C.suave, marginBottom: 6, fontWeight: 600 }}>VISTA PREVIA PDF</div>
+                  <iframe
+                    src={URL.createObjectURL(form.archivo)}
+                    title="preview-pdf"
+                    style={{ width: "100%", height: 200, borderRadius: 10, border: `1px solid ${C.borde}` }}
+                  />
+                </div>
+              );
+            }
+            return null;
+          })()}
 
           {subiendo && (
             <div style={{ marginBottom: 14 }}>
@@ -1275,76 +1421,31 @@ useEffect(() => {
   const unsub = onAuthStateChanged(auth, async (user) => {
     if (user) {
       setUsuario(user);
-
-      // ── DIAGNÓSTICO 1: verificar exactamente qué email recibe Firebase Auth
-      const emailAuth = (user.email || "").trim().toLowerCase();
-      console.log("[ROL DEBUG] user.uid:", user.uid);
-      console.log("[ROL DEBUG] user.email RAW:", JSON.stringify(user.email));
-      console.log("[ROL DEBUG] email normalizado para query:", emailAuth);
-
       try {
-        // ── Opción A: query por correo normalizado
-        const snapNorm = await getDocs(
-          query(collection(db, "usuarios"), where("correo", "==", emailAuth))
-        );
-        console.log("[ROL DEBUG] Docs con email NORMALIZADO:", snapNorm.size);
-
-        // ── Opción B (diagnóstico): query por correo tal cual viene de Auth
-        const snapRaw = await getDocs(
-          query(collection(db, "usuarios"), where("correo", "==", user.email))
-        );
-        console.log("[ROL DEBUG] Docs con email RAW:", snapRaw.size);
-
-        // ── DIAGNÓSTICO 2: listar TODOS los correos en la colección para comparar
-        const snapTodos = await getDocs(collection(db, "usuarios"));
-        console.log("[ROL DEBUG] Total docs en 'usuarios':", snapTodos.size);
-        snapTodos.forEach(d => {
-          const correoFirestore = d.data().correo;
-          console.log(
-            `[ROL DEBUG] Doc ${d.id} → correo: ${JSON.stringify(correoFirestore)} | ¿coincide normalizado?: ${(correoFirestore || "").trim().toLowerCase() === emailAuth}`
-          );
-        });
-
-        // ── Usar primero el resultado normalizado, luego el raw como fallback
-        let docData = null;
-        if (!snapNorm.empty) {
-          docData = snapNorm.docs[0].data();
-          console.log("[ROL DEBUG] Match por email NORMALIZADO:", docData);
-        } else if (!snapRaw.empty) {
-          docData = snapRaw.docs[0].data();
-          console.log("[ROL DEBUG] Match por email RAW:", docData);
+        const snapUID = await getDoc(doc(db, "usuarios", user.uid));
+        if (snapUID.exists()) {
+          setRol(snapUID.data().rol || "Estudiante");
         } else {
-          // ── DIAGNÓSTICO 3: buscar manualmente por si la query falla por índices
-          const matchManual = snapTodos.docs.find(d =>
-            (d.data().correo || "").trim().toLowerCase() === emailAuth
+          const snapCorreo = await getDocs(
+            query(collection(db, "usuarios"), where("correo", "==", (user.email || "").toLowerCase().trim()))
           );
-          if (matchManual) {
-            docData = matchManual.data();
-            console.log("[ROL DEBUG] Match MANUAL (la query where falla, revisar índices Firestore):", docData);
+          if (!snapCorreo.empty) {
+            setRol(snapCorreo.docs[0].data().rol || "Estudiante");
+          } else {
+            setRol("Estudiante");
           }
         }
-
-        if (docData) {
-          console.log("[ROL DEBUG] ROL asignado:", docData.rol);
-          setRol(docData.rol || "Estudiante");
-        } else {
-          console.warn("[ROL DEBUG] No se encontró ningún doc para este usuario. Revisa los logs anteriores.");
-          setRol("Estudiante");
-        }
-      } catch (error) {
-        console.error("[ROL DEBUG] Error al consultar Firestore:", error.code, error.message);
+      } catch (err) {
+        console.error("Error al leer rol:", err.code, err.message);
         setRol("Estudiante");
       }
-
       cargarStats();
     } else {
       setUsuario(null);
       setRol("Estudiante");
     }
-
     setCargando(false);
   });
-
   return unsub;
 }, []);
 
