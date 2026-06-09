@@ -16,27 +16,27 @@ import {
 
 // ─── PALETA ──────────────────────────────────────────────────
 const C = {
-  azul:      "#1a3a6b",
-  azulM:     "#1e4d8c",
-  azulC:     "#2563eb",
-  azulS:     "#dbeafe",
-  naranja:   "#e85d04",
-  naranjaM:  "#f97316",
-  naranjaS:  "#fff7ed",
-  exito:     "#16a34a",
-  exitoS:    "#dcfce7",
-  peligro:   "#dc2626",
-  peligroS:  "#fee2e2",
-  adv:       "#d97706",
-  advS:      "#fef3c7",
-  purpura:   "#7c3aed",
-  purpuraS:  "#ede9fe",
-  fondo:     "#f0f4f8",
-  card:      "#ffffff",
-  texto:     "#0f172a",
-  suave:     "#475569",
-  muy:       "#94a3b8",
-  borde:     "#e2e8f0",
+  azul: "#1a3a6b",
+  azulM: "#1e4d8c",
+  azulC: "#2563eb",
+  azulS: "#dbeafe",
+  naranja: "#e85d04",
+  naranjaM: "#f97316",
+  naranjaS: "#fff7ed",
+  exito: "#16a34a",
+  exitoS: "#dcfce7",
+  peligro: "#dc2626",
+  peligroS: "#fee2e2",
+  adv: "#d97706",
+  advS: "#fef3c7",
+  purpura: "#7c3aed",
+  purpuraS: "#ede9fe",
+  fondo: "#f0f4f8",
+  card: "#ffffff",
+  texto: "#0f172a",
+  suave: "#475569",
+  muy: "#94a3b8",
+  borde: "#e2e8f0",
 };
 
 const fmtFecha = (ts) => {
@@ -46,9 +46,9 @@ const fmtFecha = (ts) => {
 };
 
 const colorRol = (rol) => {
-  if (rol === "Administrador") return [C.peligro,  C.peligroS];
-  if (rol === "Maestro")       return [C.azulC,    C.azulS];
-  return                              [C.exito,    C.exitoS];
+  if (rol === "Administrador") return [C.peligro, C.peligroS];
+  if (rol === "Maestro") return [C.azulC, C.azulS];
+  return [C.exito, C.exitoS];
 };
 
 const iniciales = (str = "") =>
@@ -147,12 +147,12 @@ function CampoSelect({ label, value, onChange, options, disabled = false }) {
 function Btn({ children, onClick, variante = "primario", ancho = false, disabled = false, style: extra = {} }) {
   const [press, setPress] = useState(false);
   const estilos = {
-    primario:   { background: `linear-gradient(135deg, ${C.azulC}, ${C.azul})`, color: "#fff", border: "none", boxShadow: "0 4px 14px rgba(37,99,235,0.25)" },
-    peligro:    { background: `linear-gradient(135deg, ${C.peligro}, #b91c1c)`, color: "#fff", border: "none" },
+    primario: { background: `linear-gradient(135deg, ${C.azulC}, ${C.azul})`, color: "#fff", border: "none", boxShadow: "0 4px 14px rgba(37,99,235,0.25)" },
+    peligro: { background: `linear-gradient(135deg, ${C.peligro}, #b91c1c)`, color: "#fff", border: "none" },
     secundario: { background: "#fff", color: C.texto, border: `1.5px solid ${C.borde}` },
-    naranja:    { background: `linear-gradient(135deg, ${C.naranjaM}, ${C.naranja})`, color: "#fff", border: "none" },
-    exito:      { background: `linear-gradient(135deg, ${C.exito}, #15803d)`, color: "#fff", border: "none" },
-    ghost:      { background: "transparent", color: C.azulC, border: `1.5px solid ${C.azulC}` },
+    naranja: { background: `linear-gradient(135deg, ${C.naranjaM}, ${C.naranja})`, color: "#fff", border: "none" },
+    exito: { background: `linear-gradient(135deg, ${C.exito}, #15803d)`, color: "#fff", border: "none" },
+    ghost: { background: "transparent", color: C.azulC, border: `1.5px solid ${C.azulC}` },
   };
   return (
     <button
@@ -211,8 +211,8 @@ function Alerta({ tipo, children, onClose }) {
   const conf = {
     exito: { bg: C.exitoS, color: C.exito, icon: "✅" },
     error: { bg: C.peligroS, color: C.peligro, icon: "❌" },
-    info:  { bg: C.azulS,   color: C.azulC,   icon: "ℹ️" },
-    adv:   { bg: C.advS,    color: C.adv,     icon: "⚠️" },
+    info: { bg: C.azulS, color: C.azulC, icon: "ℹ️" },
+    adv: { bg: C.advS, color: C.adv, icon: "⚠️" },
   };
   const k = conf[tipo] || conf.info;
   return (
@@ -290,8 +290,8 @@ function EstadoBadge({ estado }) {
 // ─── SIDEBAR ─────────────────────────────────────────────────
 function Sidebar({ pantalla, setPantalla, correo, rol, onCerrar }) {
   const items = [
-    { id: "inicio",   icono: "🏠", label: "Inicio" },
-    { id: "avisos",   icono: "📢", label: "Avisos" },
+    { id: "inicio", icono: "🏠", label: "Inicio" },
+    { id: "avisos", icono: "📢", label: "Avisos" },
     { id: "mensajes", icono: "💬", label: "Mensajes" },
     { id: "usuarios", icono: "👥", label: "Usuarios" },
     { id: "informes", icono: "📊", label: "Informes" },
@@ -406,10 +406,10 @@ function TopBar({ pantalla, rol }) {
 
 // ─── LOGIN ────────────────────────────────────────────────────
 function Login() {
-  const [correo, setCorreo]         = useState("");
+  const [correo, setCorreo] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [cargando, setCargando]     = useState(false);
-  const [error, setError]           = useState("");
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState("");
 
   const handleLogin = async () => {
     if (!correo || !contrasena) { setError("Ingresa correo y contraseña."); return; }
@@ -418,10 +418,10 @@ function Login() {
       await signInWithEmailAndPassword(auth, correo.trim().toLowerCase(), contrasena);
     } catch (e) {
       const msgs = {
-        "auth/user-not-found":     "No existe una cuenta con ese correo.",
-        "auth/wrong-password":     "Contraseña incorrecta.",
+        "auth/user-not-found": "No existe una cuenta con ese correo.",
+        "auth/wrong-password": "Contraseña incorrecta.",
         "auth/invalid-credential": "Correo o contraseña incorrectos.",
-        "auth/too-many-requests":  "Demasiados intentos. Intenta más tarde.",
+        "auth/too-many-requests": "Demasiados intentos. Intenta más tarde.",
       };
       setError(msgs[e.code] || "Correo o contraseña incorrectos.");
     } finally { setCargando(false); }
@@ -466,13 +466,13 @@ function Dashboard({ correo, rol, stats, actividad, setPantalla, setFiltroUsuari
   const saludo = hora < 12 ? "Buenos días" : hora < 19 ? "Buenas tardes" : "Buenas noches";
 
   const tarjetas = [
-    { icono: "👥", val: stats.totalUsuarios,     label: "Usuarios totales",  color: C.azulC,   bg: C.azulS,   accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Todos"); } },
-    { icono: "🎓", val: stats.totalEstudiantes,  label: "Estudiantes",       color: C.exito,   bg: C.exitoS,  accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Estudiante"); } },
-    { icono: "🧑‍🏫",val: stats.totalMaestros,     label: "Maestros",          color: C.purpura, bg: C.purpuraS,accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Maestro"); } },
-    { icono: "⚙️", val: stats.totalAdmins,       label: "Administradores",   color: C.peligro, bg: C.peligroS,accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Administrador"); } },
-    { icono: "📢", val: stats.totalAvisos,       label: "Avisos",            color: C.naranja, bg: C.naranjaS,accion: () => setPantalla("avisos") },
-    { icono: "💬", val: stats.totalMensajes,     label: "Mensajes",          color: C.azulM,   bg: C.azulS,   accion: () => setPantalla("mensajes") },
-    { icono: "📊", val: stats.totalInformes,     label: "Informes",          color: C.adv,     bg: C.advS,    accion: () => setPantalla("informes") },
+    { icono: "👥", val: stats.totalUsuarios, label: "Usuarios totales", color: C.azulC, bg: C.azulS, accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Todos"); } },
+    { icono: "🎓", val: stats.totalEstudiantes, label: "Estudiantes", color: C.exito, bg: C.exitoS, accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Estudiante"); } },
+    { icono: "🧑‍🏫", val: stats.totalMaestros, label: "Maestros", color: C.purpura, bg: C.purpuraS, accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Maestro"); } },
+    { icono: "⚙️", val: stats.totalAdmins, label: "Administradores", color: C.peligro, bg: C.peligroS, accion: () => { setPantalla("usuarios"); setFiltroUsuarios("Administrador"); } },
+    { icono: "📢", val: stats.totalAvisos, label: "Avisos", color: C.naranja, bg: C.naranjaS, accion: () => setPantalla("avisos") },
+    { icono: "💬", val: stats.totalMensajes, label: "Mensajes", color: C.azulM, bg: C.azulS, accion: () => setPantalla("mensajes") },
+    { icono: "📊", val: stats.totalInformes, label: "Informes", color: C.adv, bg: C.advS, accion: () => setPantalla("informes") },
   ];
 
   // Solo mostrar Usuarios si no es estudiante
@@ -634,15 +634,15 @@ function Dashboard({ correo, rol, stats, actividad, setPantalla, setFiltroUsuari
 
 // ─── AVISOS ───────────────────────────────────────────────────
 function Avisos({ correo, rol }) {
-  const esAdmin   = rol === "Administrador";
+  const esAdmin = rol === "Administrador";
   const esMaestro = rol === "Maestro";
-  const puede     = esAdmin || esMaestro;
+  const puede = esAdmin || esMaestro;
 
-  const [avisos,   setAvisos]   = useState([]);
+  const [avisos, setAvisos] = useState([]);
   const [cargando, setCargando] = useState(true);
-  const [modalForm,setModalForm]= useState(false);
+  const [modalForm, setModalForm] = useState(false);
   const [editando, setEditando] = useState(null);
-  const [msg,      setMsg]      = useState(null);
+  const [msg, setMsg] = useState(null);
 
   const vacioForm = { titulo: "", contenido: "", tipo: "General" };
   const [form, setForm] = useState(vacioForm);
@@ -656,7 +656,7 @@ function Avisos({ correo, rol }) {
     return unsub;
   }, []);
 
-  const abrirNuevo  = () => { setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
+  const abrirNuevo = () => { setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
   const abrirEditar = (a) => { setEditando(a); setForm({ titulo: a.titulo, contenido: a.contenido, tipo: a.tipo || "General" }); setMsg(null); setModalForm(true); };
 
   const guardar = async () => {
@@ -712,7 +712,7 @@ function Avisos({ correo, rol }) {
                 {puedeE && (
                   <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
                     <Btn variante="secundario" onClick={() => abrirEditar(a)} style={{ padding: "7px 12px", fontSize: 12 }}>✏️</Btn>
-                    <Btn variante="peligro"    onClick={() => eliminar(a)}    style={{ padding: "7px 12px", fontSize: 12 }}>🗑️</Btn>
+                    <Btn variante="peligro" onClick={() => eliminar(a)} style={{ padding: "7px 12px", fontSize: 12 }}>🗑️</Btn>
                   </div>
                 )}
               </Tarjeta>
@@ -736,88 +736,206 @@ function Avisos({ correo, rol }) {
   );
 }
 
-// ─── MENSAJES ────────────────────────────────────────────────
+// ─── MENSAJES (REEMPLAZA COMPLETAMENTE EL COMPONENTE ANTERIOR) ────────────────
 function Mensajes({ correo, rol }) {
-  const esAdmin      = rol === "Administrador";
-  const esMaestro    = rol === "Maestro";
+  const esAdmin = rol === "Administrador";
+  const esMaestro = rol === "Maestro";
   const esEstudiante = rol === "Estudiante";
 
-  const [tab,        setTab]       = useState("recibidos");
-  const [mensajes,   setMensajes]  = useState([]);
-  const [publicados, setPublicados]= useState([]);
-  const [cargando,   setCargando]  = useState(true);
-  const [verMensaje, setVerMensaje]= useState(null);
-  const [msg,        setMsg]       = useState(null);
+  const [tab, setTab] = useState("recibidos");
+  const [mensajes, setMensajes] = useState([]);
+  const [publicados, setPublicados] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [verMensaje, setVerMensaje] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const hiloRef = useRef(null); // ← NUEVO: para scroll automático al final del hilo
 
   const vacioForm = { destinatario: "", rolDestino: "Administrador", asunto: "", mensaje: "" };
   const [form, setForm] = useState(vacioForm);
   const [formPub, setFormPub] = useState({ titulo: "", contenido: "" });
   const [respuestaTexto, setRespuestaTexto] = useState("");
 
-  const cargarPrivados = async () => {
-    setCargando(true);
-    const campo = tab === "recibidos" ? "destinatario" : "remitente";
-    const snap = await getDocs(query(collection(db, "mensajes"), where(campo, "==", correo), orderBy("fecha", "desc")));
-    setMensajes(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    setCargando(false);
-  };
-
-  const cargarPublicos = async () => {
-    setCargando(true);
-    const snap = await getDocs(query(collection(db, "mensajesPublicos"), orderBy("fecha", "desc")));
-    setPublicados(snap.docs.map(d => ({ id: d.id, ...d.data() })));
-    setCargando(false);
-  };
-
+  // ─── CAMBIO 1: onSnapshot en lugar de getDocs ─────────────────────────────
+  // ANTES: cargarPrivados() usaba getDocs (lectura única) y filtraba solo
+  //        por remitente O destinatario según el tab activo.
+  //
+  // AHORA: un solo onSnapshot que carga TODOS los mensajes donde el usuario
+  //        participa (como remitente O como destinatario), en tiempo real.
+  //        El filtrado entre Recibidos/Enviados ocurre en el cliente.
+  //
+  // PROBLEMA RESUELTO: Firestore no permite OR en campos distintos en una
+  // sola query. La solución es lanzar dos queries en paralelo y fusionar.
   useEffect(() => {
-    if (tab === "publica") cargarPublicos();
-    else if (tab !== "nueva") cargarPrivados();
-    else setCargando(false);
-  }, [tab]);
+    if (tab === "publica") {
+      setCargando(true);
+      const q = query(collection(db, "mensajesPublicos"), orderBy("fecha", "desc"));
+      const unsub = onSnapshot(q, snap => {
+        setPublicados(snap.docs.map(d => ({ id: d.id, ...d.data() })));
+        setCargando(false);
+      }, () => setCargando(false));
+      return unsub;
+    }
+
+    if (tab === "nueva") {
+      setCargando(false);
+      return;
+    }
+
+    // Para recibidos y enviados: query dual fusionada en tiempo real
+    setCargando(true);
+    const qRem = query(
+      collection(db, "mensajes"),
+      where("remitente", "==", correo),
+      orderBy("fecha", "desc")
+    );
+    const qDest = query(
+      collection(db, "mensajes"),
+      where("destinatario", "==", correo),
+      orderBy("fecha", "desc")
+    );
+
+    // ─── CAMBIO 2: doble onSnapshot fusionado con Map ─────────────────────
+    // Mantenemos dos snapshots activos y fusionamos por docId para evitar
+    // duplicados si el usuario se escribe a sí mismo.
+    const mapaRef = { remitente: [], destinatario: [] };
+
+    const fusionar = () => {
+      const todos = Object.values(mapaRef)
+        .flat()
+        .reduce((acc, m) => {
+          acc[m.id] = m; // dedup por id
+          return acc;
+        }, {});
+      const lista = Object.values(todos).sort(
+        (a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0)
+      );
+      setMensajes(lista);
+      setCargando(false);
+    };
+
+    const unsubRem = onSnapshot(qRem, snap => {
+      mapaRef.remitente = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      fusionar();
+    });
+    const unsubDest = onSnapshot(qDest, snap => {
+      mapaRef.destinatario = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+      fusionar();
+    });
+
+    return () => { unsubRem(); unsubDest(); };
+  }, [tab, correo]);
+
+  // ─── CAMBIO 3: Si verMensaje está abierto, suscribirse al doc en tiempo real
+  // ANTES: el modal mostraba un snapshot estático del mensaje.
+  //        Si la otra parte respondía, había que cerrar y reabrir.
+  //
+  // AHORA: onSnapshot sobre el documento individual mantiene el hilo vivo.
+  useEffect(() => {
+    if (!verMensaje) return;
+    const unsub = onSnapshot(doc(db, "mensajes", verMensaje.id), (snap) => {
+      if (snap.exists()) {
+        setVerMensaje({ id: snap.id, ...snap.data() });
+      }
+    });
+    return unsub;
+  }, [verMensaje?.id]); // solo re-suscribe si cambia el doc abierto
+
+  // ─── CAMBIO 4: scroll automático al nuevo mensaje en el hilo ─────────────
+  useEffect(() => {
+    if (hiloRef.current) {
+      hiloRef.current.scrollTop = hiloRef.current.scrollHeight;
+    }
+  }, [verMensaje?.respuestas?.length]);
 
   const enviarPrivado = async () => {
-    if (!form.destinatario || !form.mensaje) { setMsg({ tipo: "error", txt: "Destinatario y mensaje son requeridos." }); return; }
+    if (!form.destinatario || !form.mensaje) {
+      setMsg({ tipo: "error", txt: "Destinatario y mensaje son requeridos." });
+      return;
+    }
     try {
       await addDoc(collection(db, "mensajes"), {
-        remitente: correo, destinatario: form.destinatario,
-        rolDestino: form.rolDestino, asunto: form.asunto,
-        mensaje: form.mensaje, estado: "noleido",
-        fecha: serverTimestamp(), respuestas: [],
+        remitente: correo,
+        destinatario: form.destinatario,
+        rolDestino: form.rolDestino,
+        asunto: form.asunto,
+        mensaje: form.mensaje,
+        estado: "noleido",
+        fecha: serverTimestamp(),
+        respuestas: [],
       });
       setMsg({ tipo: "exito", txt: "Mensaje enviado." });
-      setForm(vacioForm); setTab("enviados");
-    } catch (e) { setMsg({ tipo: "error", txt: e.message }); }
-  };
-
-  const publicarMensaje = async () => {
-    if (!formPub.titulo || !formPub.contenido) { setMsg({ tipo: "error", txt: "Completa título y contenido." }); return; }
-    await addDoc(collection(db, "mensajesPublicos"), { titulo: formPub.titulo, contenido: formPub.contenido, autor: correo, fecha: serverTimestamp() });
-    setMsg({ tipo: "exito", txt: "Publicado." });
-    setFormPub({ titulo: "", contenido: "" }); cargarPublicos();
-  };
-
-  const abrirMensaje = async (m) => {
-    setVerMensaje(m);
-    if (m.destinatario === correo && m.estado === "noleido") {
-      await updateDoc(doc(db, "mensajes", m.id), { estado: "leido" });
-      setMensajes(prev => prev.map(x => x.id === m.id ? { ...x, estado: "leido" } : x));
+      setForm(vacioForm);
+      setTab("enviados");
+    } catch (e) {
+      setMsg({ tipo: "error", txt: e.message });
     }
   };
 
+  const publicarMensaje = async () => {
+    if (!formPub.titulo || !formPub.contenido) {
+      setMsg({ tipo: "error", txt: "Completa título y contenido." });
+      return;
+    }
+    await addDoc(collection(db, "mensajesPublicos"), {
+      titulo: formPub.titulo,
+      contenido: formPub.contenido,
+      autor: correo,
+      fecha: serverTimestamp(),
+    });
+    setMsg({ tipo: "exito", txt: "Publicado." });
+    setFormPub({ titulo: "", contenido: "" });
+  };
+
+  // ─── CAMBIO 5: abrirMensaje ahora solo marca como leído ──────────────────
+  // ANTES: setVerMensaje(m) usaba el objeto del listado (snapshot estático).
+  //
+  // AHORA: setVerMensaje(m) dispara el useEffect de onSnapshot sobre el doc,
+  //        así el modal siempre tendrá el estado más reciente.
+  const abrirMensaje = async (m) => {
+    setVerMensaje(m); // el useEffect se encarga del tiempo real
+    setRespuestaTexto("");
+    if (m.destinatario === correo && m.estado === "noleido") {
+      await updateDoc(doc(db, "mensajes", m.id), { estado: "leido" });
+    }
+  };
+
+  // ─── CAMBIO 6: responder() — cualquier participante puede responder ───────
+  // ANTES: solo Admin y Maestro podían responder, y solo si eran destinatarios.
+  //
+  // AHORA: cualquier participante (remitente o destinatario) puede continuar
+  //        el hilo. La respuesta se agrega al array respuestas[] del mismo doc.
+  //        No se crea ningún documento nuevo.
   const responder = async () => {
     if (!respuestaTexto.trim()) return;
-    const respuesta = { texto: respuestaTexto, autor: correo, fecha: new Date().toISOString() };
+    const respuesta = {
+      texto: respuestaTexto.trim(),
+      autor: correo,
+      fecha: new Date().toISOString(), // string ISO para ordenar fácil
+    };
     const nuevasResp = [...(verMensaje.respuestas || []), respuesta];
-    await updateDoc(doc(db, "mensajes", verMensaje.id), { respuestas: nuevasResp, estado: "leido" });
-    setVerMensaje(prev => ({ ...prev, respuestas: nuevasResp }));
-    setRespuestaTexto(""); setMsg({ tipo: "exito", txt: "Respuesta enviada." });
+    await updateDoc(doc(db, "mensajes", verMensaje.id), {
+      respuestas: nuevasResp,
+      estado: "leido",
+    });
+    // El onSnapshot del modal actualiza verMensaje automáticamente.
+    // No necesitamos setVerMensaje manualmente aquí.
+    setRespuestaTexto("");
   };
+
+  // ─── CAMBIO 7: filtrado en cliente para Recibidos/Enviados ───────────────
+  // Como ahora cargamos todos los mensajes donde participa el usuario,
+  // filtramos en el cliente según el tab.
+  const mensajesFiltrados = mensajes.filter(m => {
+    if (tab === "recibidos") return m.destinatario === correo;
+    if (tab === "enviados") return m.remitente === correo;
+    return true;
+  });
 
   const tabs = [
     { id: "recibidos", label: "📥 Recibidos" },
-    { id: "enviados",  label: "📤 Enviados" },
-    { id: "publica",   label: "📋 Bandeja Pública" },
-    { id: "nueva",     label: "✍️ Nuevo mensaje" },
+    { id: "enviados", label: "📤 Enviados" },
+    { id: "publica", label: "📋 Bandeja Pública" },
+    { id: "nueva", label: "✍️ Nuevo mensaje" },
   ];
 
   return (
@@ -825,14 +943,23 @@ function Mensajes({ correo, rol }) {
       {msg && <Alerta tipo={msg.tipo} onClose={() => setMsg(null)}>{msg.txt}</Alerta>}
       <div style={{ display: "flex", gap: 6, marginBottom: 20, flexWrap: "wrap" }}>
         {tabs.map(t => (
-          <button key={t.id} onClick={() => setTab(t.id)} style={{
-            padding: "8px 16px", borderRadius: 9, border: `1.5px solid ${tab === t.id ? C.azulC : C.borde}`,
-            background: tab === t.id ? C.azulS : "#fff", color: tab === t.id ? C.azulC : C.suave,
-            fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit",
-          }}>{t.label}</button>
+          <button
+            key={t.id}
+            onClick={() => setTab(t.id)}
+            style={{
+              padding: "8px 16px", borderRadius: 9,
+              border: `1.5px solid ${tab === t.id ? C.azulC : C.borde}`,
+              background: tab === t.id ? C.azulS : "#fff",
+              color: tab === t.id ? C.azulC : C.suave,
+              fontWeight: 700, fontSize: 13, cursor: "pointer", fontFamily: "inherit",
+            }}
+          >
+            {t.label}
+          </button>
         ))}
       </div>
 
+      {/* ── BANDEJA PÚBLICA (sin cambios de lógica) ── */}
       {tab === "publica" && (
         <div>
           {(esAdmin || esMaestro) && (
@@ -856,72 +983,251 @@ function Mensajes({ correo, rol }) {
         </div>
       )}
 
+      {/* ── NUEVO MENSAJE (sin cambios) ── */}
       {tab === "nueva" && (
         <Tarjeta>
           <h4 style={{ margin: "0 0 18px", fontWeight: 800, color: C.texto }}>✍️ Redactar mensaje privado</h4>
           <Campo label="Destinatario (correo)" value={form.destinatario} onChange={e => setForm(p => ({ ...p, destinatario: e.target.value }))} placeholder="correo@ceti.mx" />
-          <CampoSelect label="Rol destino" value={form.rolDestino} onChange={e => setForm(p => ({ ...p, rolDestino: e.target.value }))}
-            options={esEstudiante ? ["Maestro", "Administrador"] : ["Estudiante", "Maestro", "Administrador"]} />
+          <CampoSelect
+            label="Rol destino"
+            value={form.rolDestino}
+            onChange={e => setForm(p => ({ ...p, rolDestino: e.target.value }))}
+            options={esEstudiante ? ["Maestro", "Administrador"] : ["Estudiante", "Maestro", "Administrador"]}
+          />
           <Campo label="Asunto" value={form.asunto} onChange={e => setForm(p => ({ ...p, asunto: e.target.value }))} placeholder="Asunto del mensaje" />
           <CampoArea label="Mensaje *" value={form.mensaje} onChange={e => setForm(p => ({ ...p, mensaje: e.target.value }))} placeholder="Escribe tu mensaje aquí..." rows={5} />
           <Btn onClick={enviarPrivado}>📨 Enviar mensaje</Btn>
         </Tarjeta>
       )}
 
+      {/* ── RECIBIDOS / ENVIADOS ── */}
       {(tab === "recibidos" || tab === "enviados") && (
-        cargando ? <Spinner /> : mensajes.length === 0
-          ? <Tarjeta><div style={{ textAlign: "center", padding: 40, color: C.muy }}><div style={{ fontSize: 36 }}>💬</div><div style={{ marginTop: 8, fontWeight: 600 }}>No hay mensajes</div></div></Tarjeta>
+        cargando ? <Spinner /> : mensajesFiltrados.length === 0
+          ? (
+            <Tarjeta>
+              <div style={{ textAlign: "center", padding: 40, color: C.muy }}>
+                <div style={{ fontSize: 36 }}>💬</div>
+                <div style={{ marginTop: 8, fontWeight: 600 }}>No hay mensajes</div>
+              </div>
+            </Tarjeta>
+          )
           : (
             <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-              {mensajes.map(m => (
-                <Tarjeta key={m.id} style={{ cursor: "pointer", borderLeft: `3px solid ${m.estado === "noleido" ? C.azulC : C.borde}` }} onClick={() => abrirMensaje(m)}>
-                  <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
-                    <div style={{ flex: 1, minWidth: 0 }}>
-                      <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3 }}>
-                        <span style={{ fontWeight: 800, fontSize: 13, color: C.texto }}>
-                          {tab === "recibidos" ? `De: ${m.remitente}` : `Para: ${m.destinatario}`}
-                        </span>
-                        <EstadoBadge estado={m.estado} />
+              {mensajesFiltrados.map(m => {
+                // ─── CAMBIO 8: preview del último mensaje del hilo ────────
+                // Mostramos el texto más reciente (última respuesta o mensaje original)
+                const ultimoTexto = m.respuestas?.length > 0
+                  ? m.respuestas[m.respuestas.length - 1].texto
+                  : m.mensaje;
+                const ultimoAutor = m.respuestas?.length > 0
+                  ? m.respuestas[m.respuestas.length - 1].autor
+                  : m.remitente;
+                const totalMensajes = 1 + (m.respuestas?.length || 0);
+
+                return (
+                  <Tarjeta
+                    key={m.id}
+                    style={{
+                      cursor: "pointer",
+                      borderLeft: `3px solid ${m.estado === "noleido" && m.destinatario === correo ? C.azulC : C.borde}`,
+                    }}
+                    onClick={() => abrirMensaje(m)}
+                  >
+                    <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10 }}>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: 8, marginBottom: 3, flexWrap: "wrap" }}>
+                          <span style={{ fontWeight: 800, fontSize: 13, color: C.texto }}>
+                            {tab === "recibidos" ? `De: ${m.remitente}` : `Para: ${m.destinatario}`}
+                          </span>
+                          {m.destinatario === correo && <EstadoBadge estado={m.estado} />}
+                          {/* ─── CAMBIO 9: contador de mensajes en el hilo ─── */}
+                          {totalMensajes > 1 && (
+                            <span style={{
+                              background: C.purpuraS, color: C.purpura,
+                              fontSize: 10, fontWeight: 700,
+                              padding: "2px 7px", borderRadius: 20,
+                            }}>
+                              💬 {totalMensajes}
+                            </span>
+                          )}
+                        </div>
+                        <div style={{ fontSize: 13, fontWeight: 600, color: C.suave, marginBottom: 2 }}>
+                          {m.asunto || "(Sin asunto)"}
+                        </div>
+                        {/* Preview del último mensaje */}
+                        <div style={{ fontSize: 12, color: C.muy, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          <span style={{ color: C.suave, fontWeight: 600 }}>
+                            {ultimoAutor === correo ? "Tú: " : `${ultimoAutor.split("@")[0]}: `}
+                          </span>
+                          {ultimoTexto}
+                        </div>
                       </div>
-                      <div style={{ fontSize: 13, fontWeight: 600, color: C.suave, marginBottom: 2 }}>{m.asunto || "(Sin asunto)"}</div>
-                      <div style={{ fontSize: 12, color: C.muy, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{m.mensaje}</div>
+                      <div style={{ fontSize: 11, color: C.muy, flexShrink: 0 }}>{fmtFecha(m.fecha)}</div>
                     </div>
-                    <div style={{ fontSize: 11, color: C.muy, flexShrink: 0 }}>{fmtFecha(m.fecha)}</div>
-                  </div>
-                </Tarjeta>
-              ))}
+                  </Tarjeta>
+                );
+              })}
             </div>
           )
       )}
 
+      {/* ─── CAMBIO 10: Modal de conversación tipo chat/hilo ─────────────────
+          ANTES: mostraba el mensaje original + lista de respuestas separada +
+                 un textarea solo para admin/maestro cuando eran destinatarios.
+          
+          AHORA: muestra todos los mensajes en burbujas de chat ordenadas por
+                 fecha. Cualquier participante (remitente o destinatario) puede
+                 responder. El hilo se actualiza en tiempo real via onSnapshot.
+      */}
       {verMensaje && (
-        <Modal titulo={`Mensaje: ${verMensaje.asunto || "(Sin asunto)"}`} onClose={() => { setVerMensaje(null); setRespuestaTexto(""); }} ancho={620}>
-          <div style={{ marginBottom: 16 }}>
-            <div style={{ display: "flex", gap: 10, flexWrap: "wrap", marginBottom: 10, fontSize: 13, color: C.suave }}>
-              <span>📤 <strong>De:</strong> {verMensaje.remitente}</span>
-              <span>📥 <strong>Para:</strong> {verMensaje.destinatario}</span>
-              <span>🕐 {fmtFecha(verMensaje.fecha)}</span>
-              <EstadoBadge estado={verMensaje.estado} />
-            </div>
-            <div style={{ background: C.fondo, padding: "14px 16px", borderRadius: 10, fontSize: 14, color: C.texto, lineHeight: 1.7, whiteSpace: "pre-wrap" }}>
-              {verMensaje.mensaje}
-            </div>
+        <Modal
+          titulo={verMensaje.asunto || "(Sin asunto)"}
+          onClose={() => { setVerMensaje(null); setRespuestaTexto(""); }}
+          ancho={620}
+        >
+          {/* Cabecera de la conversación */}
+          <div style={{
+            display: "flex", gap: 10, flexWrap: "wrap",
+            marginBottom: 14, fontSize: 12, color: C.suave,
+            padding: "10px 14px", background: C.fondo, borderRadius: 10,
+          }}>
+            <span>📤 <strong>De:</strong> {verMensaje.remitente}</span>
+            <span>📥 <strong>Para:</strong> {verMensaje.destinatario}</span>
+            <span>🕐 {fmtFecha(verMensaje.fecha)}</span>
           </div>
-          {(verMensaje.respuestas || []).length > 0 && (
-            <div style={{ marginBottom: 16 }}>
-              <h4 style={{ margin: "0 0 10px", fontSize: 13, fontWeight: 800, color: C.texto }}>💬 Respuestas</h4>
-              {verMensaje.respuestas.map((r, i) => (
-                <div key={i} style={{ background: r.autor === correo ? C.azulS : C.exitoS, borderRadius: 10, padding: "10px 14px", marginBottom: 8 }}>
-                  <div style={{ fontSize: 11, fontWeight: 700, color: C.suave, marginBottom: 4 }}>✍️ {r.autor}</div>
-                  <div style={{ fontSize: 13, color: C.texto }}>{r.texto}</div>
+
+          {/* ── Hilo de mensajes tipo chat ── */}
+          <div
+            ref={hiloRef}
+            style={{
+              display: "flex", flexDirection: "column", gap: 10,
+              maxHeight: 380, overflowY: "auto",
+              padding: "4px 2px", marginBottom: 16,
+            }}
+          >
+            {/* Mensaje original — siempre primero */}
+            {(() => {
+              const esMio = verMensaje.remitente === correo;
+              return (
+                <div style={{
+                  display: "flex",
+                  flexDirection: esMio ? "row-reverse" : "row",
+                  alignItems: "flex-end", gap: 8,
+                }}>
+                  <Avatar
+                    letras={iniciales(verMensaje.remitente)}
+                    color={esMio ? C.azulC : C.exito}
+                    size={30}
+                  />
+                  <div style={{ maxWidth: "75%" }}>
+                    <div style={{
+                      fontSize: 10, fontWeight: 700, color: C.muy,
+                      marginBottom: 3,
+                      textAlign: esMio ? "right" : "left",
+                    }}>
+                      {esMio ? "Tú" : verMensaje.remitente.split("@")[0]}
+                      {" · "}{fmtFecha(verMensaje.fecha)}
+                    </div>
+                    <div style={{
+                      background: esMio ? C.azulS : C.fondo,
+                      border: `1px solid ${esMio ? C.azulC + "40" : C.borde}`,
+                      borderRadius: esMio ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                      padding: "10px 14px",
+                      fontSize: 13, color: C.texto, lineHeight: 1.6,
+                      whiteSpace: "pre-wrap",
+                    }}>
+                      {verMensaje.mensaje}
+                    </div>
+                  </div>
                 </div>
-              ))}
-            </div>
-          )}
-          {(esAdmin || esMaestro) && verMensaje.destinatario === correo && (
-            <div>
-              <CampoArea label="Responder" value={respuestaTexto} onChange={e => setRespuestaTexto(e.target.value)} placeholder="Escribe tu respuesta..." rows={3} />
-              <Btn onClick={responder}>📨 Enviar respuesta</Btn>
+              );
+            })()}
+
+            {/* Respuestas ordenadas por fecha */}
+            {[...(verMensaje.respuestas || [])]
+              .sort((a, b) => new Date(a.fecha) - new Date(b.fecha))
+              .map((r, i) => {
+                const esMio = r.autor === correo;
+                return (
+                  <div
+                    key={i}
+                    style={{
+                      display: "flex",
+                      flexDirection: esMio ? "row-reverse" : "row",
+                      alignItems: "flex-end", gap: 8,
+                    }}
+                  >
+                    <Avatar
+                      letras={iniciales(r.autor)}
+                      color={esMio ? C.azulC : C.exito}
+                      size={30}
+                    />
+                    <div style={{ maxWidth: "75%" }}>
+                      <div style={{
+                        fontSize: 10, fontWeight: 700, color: C.muy,
+                        marginBottom: 3,
+                        textAlign: esMio ? "right" : "left",
+                      }}>
+                        {esMio ? "Tú" : r.autor.split("@")[0]}
+                        {" · "}{fmtFecha({ toDate: () => new Date(r.fecha) })}
+                      </div>
+                      <div style={{
+                        background: esMio ? C.azulS : C.fondo,
+                        border: `1px solid ${esMio ? C.azulC + "40" : C.borde}`,
+                        borderRadius: esMio ? "14px 14px 4px 14px" : "14px 14px 14px 4px",
+                        padding: "10px 14px",
+                        fontSize: 13, color: C.texto, lineHeight: 1.6,
+                        whiteSpace: "pre-wrap",
+                      }}>
+                        {r.texto}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })
+            }
+          </div>
+
+          {/* ─── CAMBIO 11: cualquier participante puede responder ─────────
+              ANTES: solo (esAdmin || esMaestro) && verMensaje.destinatario === correo
+              AHORA: remitente O destinatario pueden continuar el hilo
+          */}
+          {(verMensaje.remitente === correo || verMensaje.destinatario === correo) && (
+            <div style={{
+              borderTop: `1px solid ${C.borde}`,
+              paddingTop: 14,
+            }}>
+              <div style={{ display: "flex", gap: 10, alignItems: "flex-end" }}>
+                <textarea
+                  rows={2}
+                  value={respuestaTexto}
+                  onChange={e => setRespuestaTexto(e.target.value)}
+                  placeholder="Escribe una respuesta..."
+                  onKeyDown={e => {
+                    // Ctrl+Enter / Cmd+Enter para enviar
+                    if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+                      e.preventDefault();
+                      responder();
+                    }
+                  }}
+                  style={{
+                    flex: 1, padding: "9px 13px", borderRadius: 10,
+                    border: `1.5px solid ${C.borde}`, fontSize: 13,
+                    resize: "none", outline: "none", fontFamily: "inherit",
+                    color: C.texto, background: "#fff",
+                  }}
+                />
+                <Btn
+                  onClick={responder}
+                  disabled={!respuestaTexto.trim()}
+                  style={{ padding: "10px 16px", alignSelf: "flex-end" }}
+                >
+                  📨
+                </Btn>
+              </div>
+              <div style={{ fontSize: 11, color: C.muy, marginTop: 5 }}>
+                Ctrl+Enter para enviar
+              </div>
             </div>
           )}
         </Modal>
@@ -932,16 +1238,16 @@ function Mensajes({ correo, rol }) {
 
 // ─── USUARIOS ────────────────────────────────────────────────
 function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
-  const esAdmin   = rol === "Administrador";
+  const esAdmin = rol === "Administrador";
   const esMaestro = rol === "Maestro";
 
-  const [usuarios,  setUsuarios]  = useState([]);
-  const [cargando,  setCargando]  = useState(true);
-  const [busqueda,  setBusqueda]  = useState("");
+  const [usuarios, setUsuarios] = useState([]);
+  const [cargando, setCargando] = useState(true);
+  const [busqueda, setBusqueda] = useState("");
   const [filtroRol, setFiltroRol] = useState(filtroInicial);
   const [modalForm, setModalForm] = useState(false);
-  const [editando,  setEditando]  = useState(null);
-  const [msg,       setMsg]       = useState(null);
+  const [editando, setEditando] = useState(null);
+  const [msg, setMsg] = useState(null);
 
   const vacioForm = {
     nombre: "", correo: "", password: "", rol: "Estudiante",
@@ -964,22 +1270,22 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
   }, []);
 
   const filtrados = usuarios.filter(u => {
-    const matchB = !busqueda || (u.nombre||"").toLowerCase().includes(busqueda.toLowerCase()) || (u.correo||"").toLowerCase().includes(busqueda.toLowerCase());
+    const matchB = !busqueda || (u.nombre || "").toLowerCase().includes(busqueda.toLowerCase()) || (u.correo || "").toLowerCase().includes(busqueda.toLowerCase());
     const matchR = filtroRol === "Todos" || u.rol === filtroRol;
     return matchB && matchR;
   });
 
-  const abrirNuevo  = () => { if (!esAdmin) return; setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
+  const abrirNuevo = () => { if (!esAdmin) return; setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
   const abrirEditar = (u) => {
     if (!(esAdmin || (esMaestro && u.rol === "Estudiante"))) { setMsg({ tipo: "error", txt: "Sin permiso." }); return; }
     setEditando(u); setMsg(null);
-    setForm({ nombre: u.nombre||"", correo: u.correo||"", password: "", rol: u.rol||"Estudiante", registro: u.registro||"", carrera: u.carrera||"", semestre: u.semestre||"", grupo: u.grupo||"", departamento: u.departamento||"", materia: u.materia||"" });
+    setForm({ nombre: u.nombre || "", correo: u.correo || "", password: "", rol: u.rol || "Estudiante", registro: u.registro || "", carrera: u.carrera || "", semestre: u.semestre || "", grupo: u.grupo || "", departamento: u.departamento || "", materia: u.materia || "" });
     setModalForm(true);
   };
 
   const guardar = async () => {
     if (!form.nombre || !form.correo || !form.rol) { setMsg({ tipo: "error", txt: "Nombre, correo y rol son requeridos." }); return; }
-    if (!editando && !form.password)       { setMsg({ tipo: "error", txt: "La contraseña es requerida." }); return; }
+    if (!editando && !form.password) { setMsg({ tipo: "error", txt: "La contraseña es requerida." }); return; }
     if (!editando && form.password.length < 6) { setMsg({ tipo: "error", txt: "Mínimo 6 caracteres." }); return; }
 
     try {
@@ -995,9 +1301,9 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
         const nuevoUID = cred.user.uid;
         const data = {
           uid: nuevoUID, nombre: form.nombre.trim(), correo: correoLimpio, rol: form.rol,
-          registro: form.registro||"", carrera: form.carrera||"",
-          semestre: form.semestre||"", grupo: form.grupo||"",
-          departamento: form.departamento||"", materia: form.materia||"",
+          registro: form.registro || "", carrera: form.carrera || "",
+          semestre: form.semestre || "", grupo: form.grupo || "",
+          departamento: form.departamento || "", materia: form.materia || "",
           fechaCreacion: serverTimestamp(), fechaActualizacion: serverTimestamp(),
         };
         await setDoc(doc(db, "usuarios", nuevoUID), data);
@@ -1008,8 +1314,8 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
     } catch (e) {
       const errores = {
         "auth/email-already-in-use": "Ese correo ya está registrado.",
-        "auth/weak-password":        "Contraseña muy débil.",
-        "auth/invalid-email":        "Formato de correo inválido.",
+        "auth/weak-password": "Contraseña muy débil.",
+        "auth/invalid-email": "Formato de correo inválido.",
       };
       setMsg({ tipo: "error", txt: errores[e.code] || "Error: " + e.message });
     }
@@ -1060,12 +1366,12 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
                     </div>
                     <div style={{ fontSize: 12, color: C.suave, marginBottom: 2 }}>✉️ {u.correo}</div>
                     <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11, color: C.muy }}>
-                      {u.registro     && <span>🪪 {u.registro}</span>}
-                      {u.carrera      && <span>🎓 {u.carrera}</span>}
-                      {u.semestre     && <span>📚 Sem. {u.semestre}</span>}
-                      {u.grupo        && <span>👥 Gpo. {u.grupo}</span>}
+                      {u.registro && <span>🪪 {u.registro}</span>}
+                      {u.carrera && <span>🎓 {u.carrera}</span>}
+                      {u.semestre && <span>📚 Sem. {u.semestre}</span>}
+                      {u.grupo && <span>👥 Gpo. {u.grupo}</span>}
                       {u.departamento && <span>🏢 {u.departamento}</span>}
-                      {u.materia      && <span>📖 {u.materia}</span>}
+                      {u.materia && <span>📖 {u.materia}</span>}
                     </div>
                   </div>
                   <div style={{ display: "flex", gap: 7, flexShrink: 0 }}>
@@ -1098,16 +1404,16 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
 
           {form.rol === "Estudiante" && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-              <Campo label="No. Registro"  value={form.registro}  onChange={e => setForm(p => ({ ...p, registro:  e.target.value }))} placeholder="Número de registro" />
-              <Campo label="Carrera"       value={form.carrera}   onChange={e => setForm(p => ({ ...p, carrera:   e.target.value }))} placeholder="Ingeniería en..." />
-              <Campo label="Semestre"      value={form.semestre}  onChange={e => setForm(p => ({ ...p, semestre:  e.target.value }))} placeholder="1–12" />
-              <Campo label="Grupo"         value={form.grupo}     onChange={e => setForm(p => ({ ...p, grupo:     e.target.value }))} placeholder="A, B, C..." />
+              <Campo label="No. Registro" value={form.registro} onChange={e => setForm(p => ({ ...p, registro: e.target.value }))} placeholder="Número de registro" />
+              <Campo label="Carrera" value={form.carrera} onChange={e => setForm(p => ({ ...p, carrera: e.target.value }))} placeholder="Ingeniería en..." />
+              <Campo label="Semestre" value={form.semestre} onChange={e => setForm(p => ({ ...p, semestre: e.target.value }))} placeholder="1–12" />
+              <Campo label="Grupo" value={form.grupo} onChange={e => setForm(p => ({ ...p, grupo: e.target.value }))} placeholder="A, B, C..." />
             </div>
           )}
           {form.rol === "Maestro" && (
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "0 16px" }}>
-              <Campo label="No. Empleado"  value={form.registro}     onChange={e => setForm(p => ({ ...p, registro:     e.target.value }))} placeholder="Número de empleado" />
-              <Campo label="División"      value={form.departamento} onChange={e => setForm(p => ({ ...p, departamento: e.target.value }))} placeholder="División académica" />
+              <Campo label="No. Empleado" value={form.registro} onChange={e => setForm(p => ({ ...p, registro: e.target.value }))} placeholder="Número de empleado" />
+              <Campo label="División" value={form.departamento} onChange={e => setForm(p => ({ ...p, departamento: e.target.value }))} placeholder="División académica" />
               <div style={{ gridColumn: "1 / -1" }}>
                 <Campo label="Materia que imparte" value={form.materia} onChange={e => setForm(p => ({ ...p, materia: e.target.value }))} placeholder="Nombre de la materia" />
               </div>
@@ -1130,16 +1436,16 @@ function Usuarios({ correo, rol, filtroInicial = "Todos" }) {
 
 // ─── INFORMES ────────────────────────────────────────────────
 function Informes({ correo, rol }) {
-  const esAdmin   = rol === "Administrador";
+  const esAdmin = rol === "Administrador";
   const esMaestro = rol === "Maestro";
 
-  const [informes,  setInformes]  = useState([]);
-  const [cargando,  setCargando]  = useState(true);
+  const [informes, setInformes] = useState([]);
+  const [cargando, setCargando] = useState(true);
   const [modalForm, setModalForm] = useState(false);
-  const [editando,  setEditando]  = useState(null);
-  const [msg,       setMsg]       = useState(null);
-  const [subiendo,  setSubiendo]  = useState(false);
-  const [progreso,  setProgreso]  = useState(0);
+  const [editando, setEditando] = useState(null);
+  const [msg, setMsg] = useState(null);
+  const [subiendo, setSubiendo] = useState(false);
+  const [progreso, setProgreso] = useState(0);
   const fileRef = useRef();
 
   const vacioForm = { titulo: "", descripcion: "", archivo: null, archivoNombre: "", archivoURL: "", archivoRuta: "" };
@@ -1155,10 +1461,10 @@ function Informes({ correo, rol }) {
     return unsub;
   }, []);
 
-  const abrirNuevo  = () => { setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
+  const abrirNuevo = () => { setEditando(null); setForm(vacioForm); setMsg(null); setModalForm(true); };
   const abrirEditar = (inf) => {
     setEditando(inf); setMsg(null);
-    setForm({ titulo: inf.titulo, descripcion: inf.descripcion||"", archivo: null, archivoNombre: inf.archivoNombre||"", archivoURL: inf.archivoURL||"", archivoRuta: inf.archivoRuta||"" });
+    setForm({ titulo: inf.titulo, descripcion: inf.descripcion || "", archivo: null, archivoNombre: inf.archivoNombre || "", archivoURL: inf.archivoURL || "", archivoRuta: inf.archivoRuta || "" });
     setModalForm(true);
   };
 
@@ -1185,13 +1491,13 @@ function Informes({ correo, rol }) {
     if (!form.titulo.trim()) { setMsg({ tipo: "error", txt: "El título es requerido." }); return; }
     setSubiendo(true); setProgreso(0); setMsg(null);
     try {
-      let archivoData = { archivoURL: form.archivoURL||"", archivoNombre: form.archivoNombre||"", archivoRuta: form.archivoRuta||"" };
+      let archivoData = { archivoURL: form.archivoURL || "", archivoNombre: form.archivoNombre || "", archivoRuta: form.archivoRuta || "" };
       if (form.archivo) {
         setMsg({ tipo: "info", txt: "Subiendo archivo, espera..." });
         const res = await subirArchivo();
         if (res) { archivoData = { archivoURL: res.url, archivoNombre: res.nombre, archivoRuta: res.ruta }; setMsg(null); }
       }
-      const data = { titulo: form.titulo.trim(), descripcion: form.descripcion||"", ...archivoData, autor: correo, autorCorreo: correo, fechaActualizacion: serverTimestamp() };
+      const data = { titulo: form.titulo.trim(), descripcion: form.descripcion || "", ...archivoData, autor: correo, autorCorreo: correo, fechaActualizacion: serverTimestamp() };
       if (editando) {
         await updateDoc(doc(db, "informes", editando.id), data);
         setMsg({ tipo: "exito", txt: "Informe actualizado." });
@@ -1209,17 +1515,17 @@ function Informes({ correo, rol }) {
   const eliminar = async (inf) => {
     if (!(esAdmin || (esMaestro && inf.autorCorreo === correo))) { setMsg({ tipo: "error", txt: "Sin permiso." }); return; }
     if (!confirm(`¿Eliminar informe "${inf.titulo}"?`)) return;
-    if (inf.archivoRuta) { try { await deleteObject(ref(storage, inf.archivoRuta)); } catch {} }
+    if (inf.archivoRuta) { try { await deleteObject(ref(storage, inf.archivoRuta)); } catch { } }
     await deleteDoc(doc(db, "informes", inf.id));
   };
 
   const iconoArchivo = (nombre = "") => {
     const ext = (nombre.split(".").pop() || "").toLowerCase();
     if (ext === "pdf") return "📄";
-    if (["doc","docx"].includes(ext)) return "📝";
-    if (["xls","xlsx"].includes(ext)) return "📊";
-    if (["ppt","pptx"].includes(ext)) return "📋";
-    if (["jpg","jpeg","png","gif"].includes(ext)) return "🖼️";
+    if (["doc", "docx"].includes(ext)) return "📝";
+    if (["xls", "xlsx"].includes(ext)) return "📊";
+    if (["ppt", "pptx"].includes(ext)) return "📋";
+    if (["jpg", "jpeg", "png", "gif"].includes(ext)) return "🖼️";
     return "📎";
   };
 
@@ -1246,7 +1552,7 @@ function Informes({ correo, rol }) {
                     <div style={{ fontWeight: 800, fontSize: 15, color: C.texto, marginBottom: 4 }}>{inf.titulo}</div>
                     {inf.descripcion && <div style={{ fontSize: 13, color: C.suave, marginBottom: 6 }}>{inf.descripcion}</div>}
                     {/* Vista previa inline de imagen */}
-                    {inf.archivoURL && inf.archivoNombre && ["jpg","jpeg","png","gif"].some(e => inf.archivoNombre.toLowerCase().endsWith(e)) && (
+                    {inf.archivoURL && inf.archivoNombre && ["jpg", "jpeg", "png", "gif"].some(e => inf.archivoNombre.toLowerCase().endsWith(e)) && (
                       <img src={inf.archivoURL} alt={inf.archivoNombre} style={{ maxWidth: 160, maxHeight: 100, borderRadius: 8, marginBottom: 6, objectFit: "cover" }} />
                     )}
                     <div style={{ display: "flex", gap: 14, flexWrap: "wrap", fontSize: 11, color: C.muy }}>
@@ -1262,7 +1568,7 @@ function Informes({ correo, rol }) {
                       </a>
                     )}
                     {puedeE && <Btn variante="secundario" onClick={() => abrirEditar(inf)} style={{ padding: "7px 12px", fontSize: 12 }}>✏️</Btn>}
-                    {puedeE && <Btn variante="peligro"    onClick={() => eliminar(inf)}    style={{ padding: "7px 12px", fontSize: 12 }}>🗑️</Btn>}
+                    {puedeE && <Btn variante="peligro" onClick={() => eliminar(inf)} style={{ padding: "7px 12px", fontSize: 12 }}>🗑️</Btn>}
                   </div>
                 </Tarjeta>
               );
@@ -1291,7 +1597,7 @@ function Informes({ correo, rol }) {
               }}
             >
               {form.archivo
-                ? `✅ ${form.archivo.name} (${(form.archivo.size/1024/1024).toFixed(2)} MB)`
+                ? `✅ ${form.archivo.name} (${(form.archivo.size / 1024 / 1024).toFixed(2)} MB)`
                 : form.archivoNombre ? `📎 ${form.archivoNombre} (clic para cambiar)` : "📂 Clic para seleccionar archivo"}
             </div>
             <input
@@ -1305,7 +1611,7 @@ function Informes({ correo, rol }) {
           {/* Vista previa */}
           {form.archivo && (() => {
             const ext = form.archivo.name.split(".").pop().toLowerCase();
-            if (["jpg","jpeg","png","gif","webp"].includes(ext)) {
+            if (["jpg", "jpeg", "png", "gif", "webp"].includes(ext)) {
               return (
                 <div style={{ marginBottom: 14 }}>
                   <div style={{ fontSize: 11, color: C.suave, marginBottom: 6, fontWeight: 600 }}>VISTA PREVIA</div>
@@ -1351,8 +1657,8 @@ function Informes({ correo, rol }) {
 
 // ─── APP PRINCIPAL ────────────────────────────────────────────
 export default function App() {
-  const [usuario,  setUsuario]  = useState(null);
-  const [rol,      setRol]      = useState("Estudiante");
+  const [usuario, setUsuario] = useState(null);
+  const [rol, setRol] = useState("Estudiante");
   const [pantalla, setPantalla] = useState("inicio");
   const [cargando, setCargando] = useState(true);
   const [filtroUsuarios, setFiltroUsuarios] = useState("Todos");
@@ -1374,7 +1680,7 @@ export default function App() {
             setRol(snapUID.data().rol || "Estudiante");
           } else {
             const snapCorreo = await getDocs(
-              query(collection(db, "usuarios"), where("correo", "==", (user.email||"").toLowerCase().trim()))
+              query(collection(db, "usuarios"), where("correo", "==", (user.email || "").toLowerCase().trim()))
             );
             setRol(!snapCorreo.empty ? (snapCorreo.docs[0].data().rol || "Estudiante") : "Estudiante");
           }
@@ -1397,19 +1703,19 @@ export default function App() {
       const docs = snap.docs.map(d => d.data());
       setStats(prev => ({
         ...prev,
-        totalUsuarios:    docs.length,
+        totalUsuarios: docs.length,
         totalEstudiantes: docs.filter(u => u.rol === "Estudiante").length,
-        totalMaestros:    docs.filter(u => u.rol === "Maestro").length,
-        totalAdmins:      docs.filter(u => u.rol === "Administrador").length,
+        totalMaestros: docs.filter(u => u.rol === "Maestro").length,
+        totalAdmins: docs.filter(u => u.rol === "Administrador").length,
       }));
       const ultU = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (b.fechaCreacion?.seconds||0) - (a.fechaCreacion?.seconds||0)).slice(0, 3);
+        .sort((a, b) => (b.fechaCreacion?.seconds || 0) - (a.fechaCreacion?.seconds || 0)).slice(0, 3);
       setActividad(prev => ({ ...prev, usuarios: ultU }));
     });
     const unsubA = onSnapshot(collection(db, "avisos"), snap => {
       setStats(prev => ({ ...prev, totalAvisos: snap.size }));
       const ultA = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (b.fechaCreacion?.seconds||0) - (a.fechaCreacion?.seconds||0)).slice(0, 3);
+        .sort((a, b) => (b.fechaCreacion?.seconds || 0) - (a.fechaCreacion?.seconds || 0)).slice(0, 3);
       setActividad(prev => ({ ...prev, avisos: ultA }));
     });
     const unsubM = onSnapshot(collection(db, "mensajes"), snap => {
@@ -1418,7 +1724,7 @@ export default function App() {
     const unsubI = onSnapshot(collection(db, "informes"), snap => {
       setStats(prev => ({ ...prev, totalInformes: snap.size }));
       const ultI = snap.docs.map(d => ({ id: d.id, ...d.data() }))
-        .sort((a,b) => (b.fecha?.seconds||0) - (a.fecha?.seconds||0)).slice(0, 3);
+        .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0)).slice(0, 3);
       setActividad(prev => ({ ...prev, informes: ultI }));
     });
     return () => { unsubU(); unsubA(); unsubM(); unsubI(); };
@@ -1454,7 +1760,7 @@ export default function App() {
             setFiltroUsuarios={setFiltroUsuarios}
           />
         );
-      case "avisos":   return <Avisos correo={usuario.email} rol={rol} />;
+      case "avisos": return <Avisos correo={usuario.email} rol={rol} />;
       case "mensajes": return <Mensajes correo={usuario.email} rol={rol} />;
       case "usuarios":
         return (rol === "Administrador" || rol === "Maestro")
